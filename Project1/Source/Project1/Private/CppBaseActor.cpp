@@ -18,7 +18,7 @@ void ACppBaseActor::BeginPlay()
 {
 	Super::BeginPlay();
 
-	InitLocation = FVector(0.0f, 0.0f, 0.0f);
+	InitLocation = this->GetActorLocation();
 	//ShowActorInformation();
 }
 
@@ -26,7 +26,7 @@ void ACppBaseActor::BeginPlay()
 void ACppBaseActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	SinMovement();
 }
 
 // show log information
@@ -42,13 +42,13 @@ void ACppBaseActor::ShowActorInformation() {
 
 void ACppBaseActor::SinMovement()
 {
-	const float Time = GetWorld()->GetTimeSeconds();
+	 float Time = GetWorld()->GetTimeSeconds();
 
-	const float NewX = InitLocation.X;
-	const float NewY = InitLocation.Y;
-	const float NewZ = Amplitude * FMath::Sin(Time * Frequency);
+	 float NewX = InitLocation.X;
+	 float NewY = InitLocation.Y;
+	 float NewZ = Amplitude * FMath::Sin(Time * Frequency);
 
-	 CurrLocation = InitLocation + FVector(NewX, NewY, NewZ);
+	 CurrLocation = FVector(NewX, NewY, NewZ); //InitLocation + FVector(0.0f, 0.0f, 100.0f);
 	// GetOwner()->SetActorLocation(CurrLocation);
 	this->SetActorLocation(CurrLocation);
 }
