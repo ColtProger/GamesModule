@@ -48,7 +48,7 @@ void ACppBaseActor::SinMovement()
 	 float NewY = InitLocation.Y;
 	 float NewZ = Amplitude * FMath::Sin(Time * Frequency);
 
-	 CurrLocation = FVector(NewX, NewY, NewZ); //InitLocation + FVector(0.0f, 0.0f, 100.0f);
+	 CurrLocation = FVector(NewX, NewY, NewZ); //InitLocation + FVector(NewX, NewY, NewZ);
 	// GetOwner()->SetActorLocation(CurrLocation);
 	this->SetActorLocation(CurrLocation);
 }
