@@ -8,6 +8,9 @@
 
 class UCameraComponent;
 class USpringArmComponent;
+class ULMAHealthComponent;
+class UAnimMontage;
+
 
 UCLASS()
 class LEAVEMEALONE_API ALMADefaultCharacter : public ACharacter
@@ -17,6 +20,9 @@ class LEAVEMEALONE_API ALMADefaultCharacter : public ACharacter
 public:
 	// Sets default values for this character's properties
 	ALMADefaultCharacter();
+
+	UFUNCTION()
+	ULMAHealthComponent* GetHealthComponent() const { return HealthComponent; }
 
 protected:
 	// Called when the game starts or when spawned
@@ -31,6 +37,9 @@ protected:
 	UPROPERTY()
 	UDecalComponent* CurrentCursor = nullptr;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components|Health")
+	ULMAHealthComponent* HealthComponent;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Cursor")
 	UMaterialInterface* CursorMaterial = nullptr;
 
@@ -42,6 +51,17 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float ArmLengthMax = 2000.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float MaxWalkSpeed = 600.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float MaxStamina = 100.0f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Animation")
+	UAnimMontage* DeathMontage;
+
+	
 
 public:	
 	// Called every frame
@@ -56,12 +76,18 @@ private:
 
 	//float ArmLengthMax = 2400.0f;
 	//float ArmLengthMin = 400.0f;
-	float ArmLength = 1400.0f;
+	float ArmLength = 1000.0f;
 
 	float ZoomFactor;
 	bool bZoomingIn;
 
 	float FOV = 55.0f;
+
+	float SprintSpeed = 600.0f;
+	float RunSpeed = 300.0f;
+	
+	float Stamina = MaxStamina;
+	bool ifSprinting = false;
 
 	void MoveForward(float Value);
 	void MoveRight(float Value);
@@ -69,4 +95,17 @@ private:
 	void SetMouseWheelUp();
 	void SetMouseWheelDown();
 	//void SetDestination(float ZoomFactor);
+
+	void OnDeath();
+	void RotationPlayerOnCursor();
+	void OnHealthChanged(float NewHealth);
+
+	void SprintStart();
+	void SprintEnd();
+	//void OnStaminaChanged(int Stamina);
+
+	//int GetStamina();
+
+	void DrainStamina();
+	void RegenStamina();
 };
