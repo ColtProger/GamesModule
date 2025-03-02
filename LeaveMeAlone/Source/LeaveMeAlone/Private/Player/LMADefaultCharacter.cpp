@@ -217,7 +217,7 @@ void ALMADefaultCharacter::SprintEnd()
 
 void ALMADefaultCharacter::DrainStamina()
 {
-	Stamina -= 1;
+	Stamina -= 0.1;
 	Stamina = FMath::Clamp(Stamina, 0, MaxStamina);
 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, FString::Printf(TEXT("Stamina = %f"), Stamina));
 	
@@ -230,7 +230,7 @@ void ALMADefaultCharacter::DrainStamina()
 
 void ALMADefaultCharacter::RegenStamina()
 {
-	Stamina += 5;
+	Stamina += 0.5;
 	Stamina = FMath::Clamp(Stamina, 0, MaxStamina);
 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, FString::Printf(TEXT("Stamina = %f"), Stamina));
 

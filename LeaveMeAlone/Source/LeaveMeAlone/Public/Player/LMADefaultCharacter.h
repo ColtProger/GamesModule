@@ -58,6 +58,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float MaxStamina = 100.0f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Stamina = MaxStamina;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool ifSprinting = false;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Animation")
 	UAnimMontage* DeathMontage;
 
@@ -86,8 +92,8 @@ private:
 	float SprintSpeed = 600.0f;
 	float RunSpeed = 300.0f;
 	
-	float Stamina = MaxStamina;
-	bool ifSprinting = false;
+	
+	
 
 	void MoveForward(float Value);
 	void MoveRight(float Value);
