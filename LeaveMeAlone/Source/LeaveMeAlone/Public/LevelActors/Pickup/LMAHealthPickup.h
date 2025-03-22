@@ -13,8 +13,8 @@ UCLASS()
 class LEAVEMEALONE_API ALMAHealthPickup : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	ALMAHealthPickup();
 
@@ -31,7 +31,7 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -39,5 +39,4 @@ private:
 	bool GivePickup(ALMADefaultCharacter* Character);
 	void PickupWasTaken();
 	void RespawnPickup();
-
 };

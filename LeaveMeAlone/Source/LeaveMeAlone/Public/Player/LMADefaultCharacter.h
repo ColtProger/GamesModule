@@ -24,6 +24,13 @@ public:
 	UFUNCTION()
 	ULMAHealthComponent* GetHealthComponent() const { return HealthComponent; }
 
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Counter")
+	int CoinAmount;
+
+	void AddCoinByValue(int Value);
+
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -47,25 +54,45 @@ protected:
 	FVector CursorSize = FVector(20.0f, 40.0f, 40.0f);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float ArmLengthMin = 500.0f;
+	float ArmLengthMin = 200.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float ArmLengthMax = 2000.0f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float MaxWalkSpeed = 600.0f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float MaxStamina = 100.0f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float Stamina = MaxStamina;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool ifSprinting = false;
+	float ArmLengthMax = 1400.0f;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Animation")
 	UAnimMontage* DeathMontage;
+
+	// sprinting
+
+	void UpdateStamina();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	float MaxWalkSpeed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	float SprintSpeed = 600.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	float RunSpeed = 300.0f;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Counter")
+	float Stamina;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement")
+	float MaxStamina = 100.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Movement")
+	float StaminaDrainTime  = 5.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Movement")
+	float StaminaRefillTime = 10.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Movement")
+	float DelayBeforeRefill = 10.0f;
+
+	float CurrentRefillDelayTime;
+	bool bIsSprinting;
+	bool bHasStamina;
 
 	
 
@@ -76,24 +103,20 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	
+
 private:
 
 	float YRotation = -75.0f;
 
 	//float ArmLengthMax = 2400.0f;
 	//float ArmLengthMin = 400.0f;
-	float ArmLength = 1000.0f;
+	float ArmLength = 400.0f;
 
 	float ZoomFactor;
 	bool bZoomingIn;
 
-	float FOV = 55.0f;
-
-	float SprintSpeed = 600.0f;
-	float RunSpeed = 300.0f;
-	
-	
-	
+	float FOV = 65.0f;
 
 	void MoveForward(float Value);
 	void MoveRight(float Value);
@@ -108,10 +131,11 @@ private:
 
 	void SprintStart();
 	void SprintEnd();
-	//void OnStaminaChanged(int Stamina);
+
+	//void OnStaminaChanged();
 
 	//int GetStamina();
-
-	void DrainStamina();
-	void RegenStamina();
+	//void DrainStamina();
+	//void RegenStamina();
+	
 };

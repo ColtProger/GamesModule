@@ -98,32 +98,10 @@ void ALMADefaultCharacter::Tick(float DeltaTime)
 		SpringArmComponent->TargetArmLength = ArmLength;
 		
 	}
-
-	//// sprinting
-	//{
-	//	if (ifSprinting)
-	//	{
-	//		if (Stamina == 0)
-	//			SprintEnd();
-	//		else
-	//		{
-	//			Stamina -= 1;
-	//			// Stamina = FMath::Clamp(Stamina, 0, MaxStamina);
-	//			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, FString::Printf(TEXT("Stamina = %f"), Stamina));
-	//		}
-	//	}
-	//	else
-	//	{
-	//		if (Stamina == MaxStamina){
-	//			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, FString::Printf(TEXT("Stamina = %f"), Stamina));
-	//		}	
-	//		else
-	//			Stamina += 5;
-	//		// Stamina = FMath::Clamp(Stamina, 0, MaxStamina);
-	//		   GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, FString::Printf(TEXT("Stamina = %f"), Stamina));
-	//	}
-	//}	
 	
+	{
+		UpdateStamina();
+	}
 }
 
 // Called to bind functionality to input
@@ -200,47 +178,67 @@ void ALMADefaultCharacter::OnHealthChanged(float NewHealth)
 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, FString::Printf(TEXT("Health = %f"), NewHealth));
 }
 
+void ALMADefaultCharacter::UpdateStamina()
+{
+	// drain Stamina
+	if (bIsSprinting)
+	{
+		Stamina -= StaminaDrainTime;
+		CurrentRefillDelayTime = DelayBeforeRefill;
+	}
+
+	if (!bIsSprinting && Stamina < MaxStamina)
+	{
+		CurrentRefillDelayTime--;
+		if (CurrentRefillDelayTime <= 0)
+		{
+			Stamina += StaminaRefillTime;
+		}
+	}
+
+	if (Stamina <= 0)
+	{
+		bHasStamina = false;
+		SprintEnd();
+	}
+	else
+	{
+		bHasStamina = true;
+	}
+}
+
 void ALMADefaultCharacter::SprintStart()
 {
-	GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
-	ifSprinting = true;
-	DrainStamina();
-	
+	if (bHasStamina)
+	{
+		GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
+
+		if (GetVelocity().Size() >= 0.5)
+		{
+
+			bIsSprinting = true;
+		}
+		else
+		{
+			bIsSprinting = false;
+		}
+	}
+	// DrainStamina();
 }
 
 void ALMADefaultCharacter::SprintEnd()
 {
 	GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
-	ifSprinting = false;
-	RegenStamina();
+	bIsSprinting = false;
+	// RegenStamina();
 }
 
-void ALMADefaultCharacter::DrainStamina()
+
+	// i just added code(Oct 4)
+void ALMADefaultCharacter::AddCoinByValue(int Value)
 {
-	Stamina -= 0.1;
-	Stamina = FMath::Clamp(Stamina, 0, MaxStamina);
-	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, FString::Printf(TEXT("Stamina = %f"), Stamina));
-	
-	if ((Stamina == 0)&&(ifSprinting))
-		SprintEnd();
-	else
-		DrainStamina();
-	
+	CoinAmount += Value;
 }
-
-void ALMADefaultCharacter::RegenStamina()
-{
-	Stamina += 0.5;
-	Stamina = FMath::Clamp(Stamina, 0, MaxStamina);
-	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, FString::Printf(TEXT("Stamina = %f"), Stamina));
-
-	if ((Stamina == MaxStamina) &&(!ifSprinting))
-		return;
-	else
-		RegenStamina();
-}
-
-
 
 
 
